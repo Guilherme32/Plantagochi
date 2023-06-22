@@ -1,0 +1,4 @@
+# Will only work on bleeding edge helix build (built from github master)
+[language-server]
+
+clangd = { command = "clangd", args = ["--query-driver=/home/william/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-gcc"] }
