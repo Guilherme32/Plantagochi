@@ -8,6 +8,7 @@
 
 #include "driver/i2c.h"
 #include <math.h>
+#include <stdint.h>
 
 /**
 * Initializes the sensor. The initialization is for the i2c interface

@@ -6,11 +6,7 @@
 * @author Guilherme Sampaio
 */
 
-
-// Region // Includes ---------------------------------------------------------
-
 #include "dht20.h"
-#include <stdint.h>
 
 
 // Region // Definitions -------------------------------------------------------

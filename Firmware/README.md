@@ -2,7 +2,7 @@
 
 Passos a serem construídos:
 - [x] Utilização do sensor de temperatura / umidade ambiente
-- [ ] Utilização do sensor de umidade do solo
+- [x] Utilização do sensor de umidade do solo
 - [ ] Leds indicando situação atual dos sensores
 - [ ] Comunicação com o banco de dados
 - [ ] Conexão com rede wifi
