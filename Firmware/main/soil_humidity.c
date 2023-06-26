@@ -14,7 +14,7 @@
 
 // Region // Definitions -------------------------------------------------------
 
-#define MOISTURE_ADC_CHANNEL ADC_CHANNEL_4
+#define MOISTURE_ADC_CHANNEL ADC_CHANNEL_5
 
 // Region // Global variables
 

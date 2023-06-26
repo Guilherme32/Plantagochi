@@ -16,6 +16,7 @@
 
 #include "dht20.h"
 #include "soil_humidity.h"
+#include "wifi.h"
 
 
 void test_dth20_task() {
@@ -54,13 +55,14 @@ void app_main(void)
 {
     ESP_ERROR_CHECK(dht20_init());
     ESP_ERROR_CHECK(moisture_sensor_init());
+    ESP_ERROR_CHECK(wifi_init());
 
-    xTaskCreate(
-        test_moisture_sensor_task,
-        "Moisture test",
-        4096,
-        NULL,
-        10,
-        NULL
-        );
+    // xTaskCreate(
+    //     test_moisture_sensor_task,
+    //     "Moisture test",
+    //     4096,
+    //     NULL,
+    //     10,
+    //     NULL
+    //     );
 }
