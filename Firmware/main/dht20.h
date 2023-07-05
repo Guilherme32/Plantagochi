@@ -21,7 +21,7 @@ esp_err_t dht20_init();
 * @param int16_t* temperature Pointer to store the read temperature (in 10 * ºC)
 * @return bool true if succesfull, false if failed
 */
-bool dht20_read(int16_t* humidity, int16_t* temperature);
+bool dht20_read(int* humidity, int* temperature);
 
 /**
 * Simple test. Continually reads and prints the values from the sensor

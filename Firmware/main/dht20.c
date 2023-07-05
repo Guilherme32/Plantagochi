@@ -62,7 +62,7 @@ static void dht20_ask_measurement();
 * @param int16_t* temperature Pointer to store the read temperature (in 10 * ºC)
 * @return bool true if succesfull, false if failed
 */
-static bool dht20_retrieve_measurement(int16_t* humidity, int16_t* temperature);
+static bool dht20_retrieve_measurement(int* humidity, int* temperature);
 
 
 // Region // Static function definitions ---------------------------------------
@@ -182,7 +182,7 @@ static void dht20_ask_measurement() {
     i2c_cmd_link_delete(trigger_chain);
 }
 
-static bool dht20_retrieve_measurement(int16_t* humidity, int16_t* temperature) {
+static bool dht20_retrieve_measurement(int* humidity, int* temperature) {
     // Check status
     for (int i=0; i<100; i++) {
         uint8_t status = dht20_get_status();
@@ -242,15 +242,15 @@ esp_err_t dht20_init() {
     return i2c_init();
 }
 
-bool dht20_read(int16_t* humidity, int16_t* temperature) {
+bool dht20_read(int* humidity, int* temperature) {
     dht20_ask_measurement();
     vTaskDelay(80/portTICK_PERIOD_MS);
     return dht20_retrieve_measurement(humidity, temperature);
 }
 
 void test_dth20_task() {
-    int16_t humidity;
-    int16_t temperature;
+    int humidity;
+    int temperature;
 
     while (true) {
         humidity = 0;

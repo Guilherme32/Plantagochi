@@ -22,6 +22,7 @@
 #include "wifi.h"
 #include "leds.h"
 #include "database.h"
+#include "sensor_reader.h"
 
 
 void app_main(void)
@@ -30,7 +31,9 @@ void app_main(void)
     ESP_ERROR_CHECK(moisture_sensor_init());
     ESP_ERROR_CHECK(wifi_init());
     ESP_ERROR_CHECK(leds_init());
-
-    vTaskDelay(10000/portTICK_PERIOD_MS);
     ESP_ERROR_CHECK(database_init());
+
+
+    xTaskCreate(leds_breathe_task, "leds_breathe", 4096, NULL, 10, NULL);
+    xTaskCreate(sensor_reader_task, "sensors_read", 8182, NULL, 10, NULL);
 }

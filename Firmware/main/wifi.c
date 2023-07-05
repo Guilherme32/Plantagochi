@@ -5,6 +5,7 @@
 #include "freertos/event_groups.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
+#include <string.h>
 
 
 #define SSID "Internet do Japao"
@@ -14,6 +15,8 @@
 static const char *TAG = "WIFI";
 
 static int retries = 0;
+// Should have a mutex / critical section on ip accesses
+static char ip[32] = {0}; 
 
 
 static void event_handler(void* arg, esp_event_base_t event_base,
@@ -22,6 +25,7 @@ static void event_handler(void* arg, esp_event_base_t event_base,
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         esp_wifi_connect();
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
+        ip[0] = 0;
         if (retries < MAX_RETRY) {
             esp_wifi_connect();
             retries++;
@@ -31,8 +35,18 @@ static void event_handler(void* arg, esp_event_base_t event_base,
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
         ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
+        sprintf(ip, ""IPSTR, IP2STR(&event->ip_info.ip));
         retries = 0;
     }
+}
+
+bool get_ip(char* out_ip) {
+    if (ip[0] == 0) {
+        return false;
+    }
+
+    sprintf(out_ip, "%s", ip);
+    return true;
 }
 
 esp_err_t wifi_init(void)
