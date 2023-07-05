@@ -84,8 +84,8 @@ void leds_breathe_task() {
             phase -= 2 * PI;
         }
         int new_duty_0 = (int) (1024 * powf((sin(phase)), 2));
-        int new_duty_1 = (int) (1024 * powf((sin(phase + 2*PI/3)), 2));
-        int new_duty_2 = (int) (1024 * powf((sin(phase + 4*PI/3)), 2));
+        int new_duty_1 = (int) (1024 * powf((sin(phase + 1*PI/3)), 2));
+        int new_duty_2 = (int) (1024 * powf((sin(phase + 2*PI/3)), 2));
 
         ESP_ERROR_CHECK(ledc_set_duty(LEDC_MODE, LEDC_CHANNEL_0, new_duty_0));
         ESP_ERROR_CHECK(ledc_update_duty(LEDC_MODE, LEDC_CHANNEL_0));

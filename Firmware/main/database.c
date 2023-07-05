@@ -3,14 +3,17 @@
 
 #define MAX_HTTP_RECV_BUFFER 512
 #define MAX_HTTP_OUTPUT_BUFFER 1024
+
+#define DATABASE_LED_PIN 23
+#define LED_MASK (1ULL << DATABASE_LED_PIN)
+
 static const char *TAG = "HTTP_CLIENT";
 
-// static const char* host = "192.168.0.112:8000";
 static SemaphoreHandle_t host_mutex;
 static char host[32] = {0};
 
 
-bool send_data(int temperature, int soil_humidity, int ambient_humidity)
+bool send_data(int temperature, int ambient_humidity, int soil_humidity)
 {
     char local_response_buffer[MAX_HTTP_OUTPUT_BUFFER] = {0};
 
@@ -53,6 +56,8 @@ bool send_data(int temperature, int soil_humidity, int ambient_humidity)
 }
 
 bool find_host() {
+    gpio_set_level(DATABASE_LED_PIN, 0);
+
     char base_host[20] = {0};
     if (!get_ip(base_host)) {
         return false;
@@ -73,7 +78,7 @@ bool find_host() {
         .query = "esp",
         .user_data = local_response_buffer,        // Pass address of local buffer to get response
         .disable_auto_redirect = true,
-        .timeout_ms = 2000
+        .timeout_ms = 500
     };
     esp_http_client_handle_t client = esp_http_client_init(&config);
 
@@ -91,6 +96,7 @@ bool find_host() {
             xSemaphoreGive(host_mutex);
 
             printf("Host encontrado: %s\n", host);
+            gpio_set_level(DATABASE_LED_PIN, 1);
             return true;
         } else {
             printf("Addr %s address failed \n", address);
@@ -103,6 +109,16 @@ bool find_host() {
 esp_err_t database_init() {
     printf("Trying to send the request...\n");
     host_mutex = xSemaphoreCreateMutex();
+
+    // Setup led
+    gpio_config_t pin_config;
+    pin_config.intr_type = GPIO_INTR_DISABLE;
+    pin_config.mode = GPIO_MODE_OUTPUT;
+    pin_config.pin_bit_mask = LED_MASK;
+    pin_config.pull_down_en = 0;
+    pin_config.pull_up_en = 0;
+    gpio_config(&pin_config);
+    gpio_set_level(DATABASE_LED_PIN, 0);
 
     return ESP_OK;
 }

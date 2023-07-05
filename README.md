@@ -3,7 +3,7 @@ Data logger de saúde de solo / ambiente desenvolvido como trabalho para a disci
 
 Partes do projeto e responsáveis:
 
-- [ ] Firmware (Guilherme)
+- [x] Firmware (Guilherme)
 - [ ] Banco de dados (Gabriel)
 - [ ] Design da PCB (Lucas)
 - [ ] Interface (Juliana / Júlia)

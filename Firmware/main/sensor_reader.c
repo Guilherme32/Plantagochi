@@ -24,7 +24,7 @@ float sensors_to_breathe_period(int temperature, int ambient_humidity, int soil_
 
     float total_factor =  temp_factor * amb_hum_factor * soil_factor;
 
-    return (2000) + (14000 - 2000) * total_factor;
+    return (1000) + (14000 - 1000) * total_factor;
 }
 
 void sensor_reader_task() {
@@ -67,6 +67,7 @@ void sensor_reader_task() {
         if (retries >= 10) {
             printf("Could not find host 10 times in a row, trying to find it again\n");
             find_host();
+            retries = -60;        // Makes the next threshold take longer
         }
 
         vTaskDelay(1000/portTICK_PERIOD_MS);            // wait for new cycle

@@ -1,16 +1,12 @@
 #include "wifi.h"
-#include "esp_err.h"
-#include "esp_event.h"
 #include "esp_wifi_default.h"
-#include "freertos/event_groups.h"
-#include "esp_log.h"
-#include "nvs_flash.h"
-#include <string.h>
 
+#define SSID "WifiGuilherme"
+#define PASSWORD "uhvg8322"
+#define MAX_RETRY 10000
 
-#define SSID "Internet do Japao"
-#define PASSWORD "lslbt78322"
-#define MAX_RETRY 10
+#define WIFI_LED_PIN 13
+#define LED_MASK (1ULL << WIFI_LED_PIN)
 
 static const char *TAG = "WIFI";
 
@@ -32,10 +28,12 @@ static void event_handler(void* arg, esp_event_base_t event_base,
             ESP_LOGI(TAG, "retry to connect to the AP");
         } 
         ESP_LOGI(TAG,"connect to the AP fail");
+        gpio_set_level(WIFI_LED_PIN, 0);
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t* event = (ip_event_got_ip_t*) event_data;
         ESP_LOGI(TAG, "got ip:" IPSTR, IP2STR(&event->ip_info.ip));
         sprintf(ip, ""IPSTR, IP2STR(&event->ip_info.ip));
+        gpio_set_level(WIFI_LED_PIN, 1);
         retries = 0;
     }
 }
@@ -94,6 +92,16 @@ esp_err_t wifi_init(void)
     ESP_ERROR_CHECK(esp_wifi_start() );
 
     ESP_LOGI(TAG, "wifi_init_sta finished.");
+
+    // Setup led
+    gpio_config_t pin_config;
+    pin_config.intr_type = GPIO_INTR_DISABLE;
+    pin_config.mode = GPIO_MODE_OUTPUT;
+    pin_config.pin_bit_mask = LED_MASK;
+    pin_config.pull_down_en = 0;
+    pin_config.pull_up_en = 0;
+    gpio_config(&pin_config);
+    gpio_set_level(WIFI_LED_PIN, 0);
 
     return ESP_OK;
 }

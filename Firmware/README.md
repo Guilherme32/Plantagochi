@@ -6,5 +6,5 @@ Passos a serem construídos:
 - [x] Leds indicando situação atual dos sensores
 - [x] Comunicação com o banco de dados
 - [x] Conexão com rede wifi
-- [ ] Led indicando a comunicação com o banco de dados
-- [ ] Led indicando a conexão wifi
+- [x] Led indicando a comunicação com o banco de dados
+- [x] Led indicando a conexão wifi
