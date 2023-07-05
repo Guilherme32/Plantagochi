@@ -100,3 +100,15 @@ int moisture_sensor_read() {
 
     return relative;
 }
+
+void test_moisture_sensor_task() {
+    while (true) {
+        int moisture = moisture_sensor_read();
+        printf(
+            "Soil relative humidity: %d.%d\n",
+            moisture / 10,
+            moisture % 10
+            );
+        vTaskDelay(10);
+    }
+}

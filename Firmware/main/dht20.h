@@ -23,3 +23,7 @@ esp_err_t dht20_init();
 */
 bool dht20_read(int16_t* humidity, int16_t* temperature);
 
+/**
+* Simple test. Continually reads and prints the values from the sensor
+*/
+void test_dth20_task();

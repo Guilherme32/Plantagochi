@@ -242,11 +242,30 @@ esp_err_t dht20_init() {
     return i2c_init();
 }
 
-
 bool dht20_read(int16_t* humidity, int16_t* temperature) {
     dht20_ask_measurement();
     vTaskDelay(80/portTICK_PERIOD_MS);
     return dht20_retrieve_measurement(humidity, temperature);
+}
+
+void test_dth20_task() {
+    int16_t humidity;
+    int16_t temperature;
+
+    while (true) {
+        humidity = 0;
+        temperature = 0;
+
+        dht20_read(&humidity, &temperature);
+        printf(
+            "Humidity: %d.%d%%  (+-3)  |    Temperature: %d.%dºC  (+-0.5)\n",
+            humidity / 10,
+            humidity % 10,
+            temperature / 10,
+            temperature % 10
+        );
+        vTaskDelay(10);
+    }
 }
 
 

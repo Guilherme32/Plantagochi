@@ -7,8 +7,8 @@
 #include "nvs_flash.h"
 
 
-#define SSID "WifiGuilherme"
-#define PASSWORD "uhvg8322"
+#define SSID "Internet do Japao"
+#define PASSWORD "lslbt78322"
 #define MAX_RETRY 10
 
 static const char *TAG = "WIFI";

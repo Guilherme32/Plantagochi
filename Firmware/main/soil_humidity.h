@@ -9,6 +9,8 @@
 * @author Guilherme Sampaio
 */
 
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "esp_adc/adc_oneshot.h"
 #include "sdkconfig.h"
 
@@ -26,3 +28,8 @@ esp_err_t moisture_sensor_init();
 */
 int moisture_sensor_read();
 
+/**
+* Task for testing the moisture sensor. Continually collect and prints the
+* sensor reading
+*/
+void test_moisture_sensor_task();
