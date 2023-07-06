@@ -8,7 +8,7 @@
 
 #define SENSOR_LED_PIN_0 27
 #define SENSOR_LED_PIN_1 14
-#define SENSOR_LED_PIN_2 12
+#define SENSOR_LED_PIN_2 33
 #define OUTPUT_PINS_MASK ((1ULL << SENSOR_LED_PIN_0) \
                          |(1ULL << SENSOR_LED_PIN_1) \
                          |(1ULL << SENSOR_LED_PIN_2))

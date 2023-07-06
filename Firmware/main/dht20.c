@@ -7,6 +7,7 @@
 */
 
 #include "dht20.h"
+#include "driver/i2c.h"
 
 
 // Region // Definitions -------------------------------------------------------
@@ -54,7 +55,7 @@ static uint8_t dht20_get_status();
 * Asks the dht20 to make a measurement. This is a needed step before trying
 * to read (retrieve) the data
 */
-static void dht20_ask_measurement();
+static bool dht20_ask_measurement(int depth);
 
 /**
 * Retrieves the humidity and temperature read by the dht20 sensor
@@ -84,13 +85,23 @@ static esp_err_t i2c_init() {
         return error;
     }
 
-    return i2c_driver_install(
+    error = i2c_set_timeout(i2c_master_port, 8000);
+    if (error != ESP_OK) {
+        return error;
+    }
+
+    error = i2c_driver_install(
         i2c_master_port,
         I2C_MODE_MASTER,
         0,
         0,
         ESP_INTR_FLAG_LEVEL1
     );
+    if (error != ESP_OK) {
+        return error;
+    }
+
+    return ESP_OK;
 }
 
 
@@ -156,15 +167,19 @@ static uint8_t dht20_get_status() {
     return status;
 }
 
-static void dht20_ask_measurement() {
+static bool dht20_ask_measurement(int depth) {
     // Check datasheet for the process
+    if (depth > 10) {
+        return false;
+    }
+
     uint8_t status = dht20_get_status();
 
     if (status != 0x18) {
         dht20_reset_register(0x1b);
         dht20_reset_register(0x1c);
         dht20_reset_register(0x1e);
-        return dht20_ask_measurement();
+        return dht20_ask_measurement(depth + 1);
     }
 
     vTaskDelay(1 + 10/portTICK_PERIOD_MS);
@@ -180,6 +195,8 @@ static void dht20_ask_measurement() {
 
     i2c_master_cmd_begin(I2C_PORT, trigger_chain, I2C_MAX_DELAY);
     i2c_cmd_link_delete(trigger_chain);
+
+    return true;
 }
 
 static bool dht20_retrieve_measurement(int* humidity, int* temperature) {
@@ -243,7 +260,9 @@ esp_err_t dht20_init() {
 }
 
 bool dht20_read(int* humidity, int* temperature) {
-    dht20_ask_measurement();
+    if (!dht20_ask_measurement(0)) {
+        return false;
+    }
     vTaskDelay(80/portTICK_PERIOD_MS);
     return dht20_retrieve_measurement(humidity, temperature);
 }
