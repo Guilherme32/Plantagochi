@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Page</title>
+</head>
+<body>
+    <h1>Dados do Sensor - PLANTAGOCHI</h1>
+    <table>
+        <tr>
+            <th>Datetime</th>
+            <th>Temperature</th>
+            <th>Soil Humidity</th>
+            <th>Ambient Humidity</th>
+        </tr>
+        {% for entry in data %}
+            <tr>
+                <td>{{ entry['datetime'] }}</td>
+                <td>{{ entry['temperature'] }}</td>
+                <td>{{ entry['soilhumidity'] }}</td>
+                <td>{{ entry['ambienthumidity'] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

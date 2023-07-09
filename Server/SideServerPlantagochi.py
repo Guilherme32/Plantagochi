@@ -1,9 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 from datetime import datetime
 import sqlite3
 import os
 from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 class Data(BaseModel):
     temperature: int
@@ -11,8 +12,14 @@ class Data(BaseModel):
     ambient_humidity: int
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
-@app.get("/", response_class=HTMLResponse)
+# Route for the home page
+@app.get('/')
+def home(request: Request):
+    background_color = '#f2f2f2'  # Default background color
+    return templates.TemplateResponse("home.html", {"request": request, "background_color": background_color})
+""" @app.get("/", response_class=HTMLResponse)
 async def root():
     # Get the current directory of the file
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -40,7 +47,7 @@ async def root():
         table_html += f"<tr><td style='text-align: center;'>{datetime_str}</td><td style='text-align: center;'>{row[2]}</td><td style='text-align: center;'>{row[3]}</td><td style='text-align: center;'>{row[4]}</td></tr>"
     table_html += "</table>"
 
-    return f"""
+    return f'''
         <html>
         <head>
             <title>Sensor Data</title>
@@ -55,8 +62,19 @@ async def root():
             {table_html}
         </body>
         </html>
-    """
+    ''' """
 
+@app.route('/database')
+def database():
+    # Retrieve your database data here and pass it to the template
+    # Example data
+    database_data = [
+        {'datetime': 'datadb'},
+        {'temperature': 'tempdb'},
+        {'soilhumidity': 'shdb'},
+        {'ambienthumidity': 'ahdb'}
+    ]
+    return render_template('database.html', data=database_data)
 
 @app.get("/PlantagochiUFJF_GGJJL/")
 async def root():
